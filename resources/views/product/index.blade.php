@@ -1,24 +1,23 @@
+<!-- filepath: /c:/laragon/www/api-showcase/resources/views/product/index.blade.php -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product List</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container mt-5">
-        <h1 class="mb-4">Product List</h1>
-        <div class="row">
+    <div class="container mx-auto mt-5">
+        <h1 class="text-3xl font-bold mb-4">Product List</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             @foreach($data as $product)
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ $product['nama_produk'] }}</h5>
-                            <p class="card-text">{{ $product['deskripsi_produk'] }}</p>
-                            <p class="card-text"><strong>Price:</strong> {{ $product['harga_produk'] }}</p>
-                            <p class="card-text"><strong>Stock:</strong> {{ $product['stok_produk'] }}</p>
-                        </div>
+                <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                    <div class="p-4">
+                        <h5 class="text-xl font-semibold mb-2">{{ $product['nama_produk'] }}</h5>
+                        <p class="text-gray-700 mb-2">{{ $product['deskripsi_produk'] }}</p>
+                        <p class="text-gray-900 font-bold mb-2">Price: {{ $product['harga_produk'] }}</p>
+                        <p class="text-gray-900 font-bold">Stock: {{ $product['stok_produk'] }}</p>
                     </div>
                 </div>
             @endforeach
