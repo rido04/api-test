@@ -16,7 +16,7 @@ class ProductController extends Controller
     {
         $product = Product::all();
         return response()->json([
-            'status' => 'true',
+            'status' => 'success',
             'message' => 'Data produk berhasil diambil',
             'data' => $product
         ]);
@@ -40,7 +40,7 @@ class ProductController extends Controller
 
         $product = Product::create($request->all());
         return response()->json([
-            'status' => 'true',
+            'status' => 'success',
             'message' => 'Data produk berhasil ditambahkan',
             'data' => $product
         ], 201);
@@ -60,7 +60,7 @@ class ProductController extends Controller
         }
 
         return response()->json([
-            'status' => 'true',
+            'status' => 'success',
             'message' => 'Data produk ditemukan',
             'data' => $product
         ]);
@@ -92,7 +92,7 @@ class ProductController extends Controller
 
         $product->update($request->all());
         return response()->json([
-            'status' => 'true',
+            'status' => 'success',
             'message' => 'Data produk berhasil diupdate',
             'data' => $product
         ]);
@@ -113,7 +113,7 @@ class ProductController extends Controller
 
         $product->delete();
         return response()->json([
-            'status' => 'true',
+            'status' => 'success',
             'message' => 'Data produk berhasil dihapus',
         ]);
     }
