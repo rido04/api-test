@@ -58,7 +58,12 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $product = Product::findOrFail($id);
+        if (!$product) {
+            return ('Data produk tidak ditemukan');
+        }
+
+        return view('product.show', compact('product'));
     }
 
     /**
