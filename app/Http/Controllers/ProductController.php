@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Product;
 
+use function PHPUnit\Framework\returnSelf;
+
 class ProductController extends Controller
 {
     /**
@@ -87,7 +89,12 @@ class ProductController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $product = Product::findOrFail($id);
+        if (!$product) {
+            return ('Data produk tidak ditemukan');
+        }
+
+        return view('product.edit', compact('product'));
     }
 
     /**
@@ -95,11 +102,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $product = Product::findOrFail($id);
-        if (!$product) {
-            return ([ 'error' => 'Data produk tidak ditemukan']);
-        }
-
+        // Validasi data
         $validator = Validator::make($request->all(), [
             'nama_produk' => 'required|string',
             'deskripsi_produk' => 'required|string',
@@ -108,11 +111,35 @@ class ProductController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return ([ 'error' => $validator->errors()]);
+            return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $product->update($request->all());
-        return redirect()->route('products.index')->with('success', 'Data produk berhasil diubah');
+        // Data produk
+        $parameters = [
+            'nama_produk' => $request->nama_produk,
+            'deskripsi_produk' => $request->deskripsi_produk,
+            'harga_produk' => $request->harga_produk,
+            'stok_produk' => $request->stok_produk,
+        ];
+
+        // Kirim permintaan ke API
+        $client = new Client();
+        $url = "http://127.0.0.1:8000/api/products/{$id}";
+        $response = $client->request('PUT', $url, [
+            'headers' => [
+                'Content-Type' => 'application/json',
+            ],
+            'body' => json_encode($parameters),
+        ]);
+
+        $content = $response->getBody()->getContents();
+        $contentArray = json_decode($content, true);
+
+        if ($contentArray['status'] == 'success') {
+            return redirect()->route('products.index')->with('success', 'Data produk berhasil diubah');
+        } else {
+            return redirect()->route('products.index')->with('error', 'Data produk gagal diubah');
+        }
     }
 
     /**

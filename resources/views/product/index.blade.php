@@ -25,6 +25,7 @@
                         <p class="text-gray-900 font-bold mb-2">Price: {{ $product['harga_produk'] }}</p>
                         <p class="text-gray-900 font-bold">Stock: {{ $product['stok_produk'] }}</p>
                         <a href="{{ route('products.show', $product['id']) }}" class="text-blue-500 hover:underline">View Details</a>
+                        <a href="{{ route('products.edit', $product['id']) }}" class="text-yellow-500 hover:underline">Edit</a>
                     </div>
                 </div>
             @endforeach
