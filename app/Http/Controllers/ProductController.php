@@ -38,19 +38,35 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'nama_produk' => 'required|string',
-            'deskripsi_produk' => 'required|string',
-            'harga_produk' => 'required|integer',
-            'stok_produk' => 'required|integer',
-        ]);
+        $product = $request->nama_produk;
+        $description = $request->deskripsi_produk;
+        $price = $request->harga_produk;
+        $stock = $request->stok_produk;
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+        $parameters = [
+            'nama_produk' => $product,
+            'deskripsi_produk' => $description,
+            'harga_produk' => $price,
+            'stok_produk' => $stock,
+        ];
+
+        $client = new Client();
+        $url = ('http://127.0.0.1:8000/api/products');
+        $response = $client->request('POST', $url, [
+            'headers' => [
+                'Content-Type' => 'application/json',
+            ],
+            'body' => json_encode($parameters),
+        ]);
+        $content= $response->getBody()->getContents();
+        $contentArray = json_decode($content, true);
+        if ($contentArray['status'] == 'success') {
+            return redirect()->route('products.index')->with('success', 'Data produk berhasil ditambahkan');
+        } else {
+            return redirect()->route('products.index')->with('error', 'Data produk gagal ditambahkan');
         }
 
-        $product = Product::create($request->all());
-        return redirect()->route('products.index')->with('success', 'Data produk berhasil ditambahkan');
+
     }
 
     /**
@@ -79,7 +95,24 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $product = Product::findOrFail($id);
+        if (!$product) {
+            return ([ 'error' => 'Data produk tidak ditemukan']);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'nama_produk' => 'required|string',
+            'deskripsi_produk' => 'required|string',
+            'harga_produk' => 'required|integer',
+            'stok_produk' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return ([ 'error' => $validator->errors()]);
+        }
+
+        $product->update($request->all());
+        return redirect()->route('products.index')->with('success', 'Data produk berhasil diubah');
     }
 
     /**
