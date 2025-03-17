@@ -26,6 +26,11 @@
                         <p class="text-gray-900 font-bold">Stock: {{ $product['stok_produk'] }}</p>
                         <a href="{{ route('products.show', $product['id']) }}" class="text-blue-500 hover:underline">View Details</a>
                         <a href="{{ route('products.edit', $product['id']) }}" class="text-yellow-500 hover:underline">Edit</a>
+                        <form action="{{ route('products.destroy', $product['id']) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this product?');" class="inline-block">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-red-500 hover:underline">Delete</button>
+                        </form>
                     </div>
                 </div>
             @endforeach

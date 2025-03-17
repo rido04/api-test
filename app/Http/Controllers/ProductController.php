@@ -147,6 +147,20 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $client = new Client();
+        $url = "http://127.0.0.1:8000/api/products/{$id}";
+        $response = $client->request('DELETE', $url, [
+            'headers' => [
+                'Content-Type' => 'application/json',
+            ],
+        ]);
+        $content = $response->getBody()->getContents();
+        $contentArray = json_decode($content, true);
+
+        if ($contentArray['status'] == 'success') {
+            return redirect()->route('products.index')->with('success', 'Data produk berhasil dihapus');
+        } else {
+            return redirect()->route('products.index')->with('error', 'Data produk gagal dihapus');
+        }
     }
 }
