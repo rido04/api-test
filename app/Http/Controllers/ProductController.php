@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use App\Models\Product;
 
 class ProductController extends Controller
 {
@@ -28,7 +30,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        return view('product.create');
     }
 
     /**
@@ -36,7 +38,19 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'nama_produk' => 'required|string',
+            'deskripsi_produk' => 'required|string',
+            'harga_produk' => 'required|integer',
+            'stok_produk' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
+        $product = Product::create($request->all());
+        return redirect()->route('products.index')->with('success', 'Data produk berhasil ditambahkan');
     }
 
     /**

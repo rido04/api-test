@@ -10,6 +10,12 @@
 <body>
     <div class="container mx-auto mt-5">
         <h1 class="text-3xl font-bold mb-4">Product List</h1>
+        @if(session('success'))
+            <div class="bg-green-500 text-white p-4 rounded mb-4">
+                {{ session('success') }}
+            </div>
+        @endif
+        <a href="{{ route('products.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4 inline-block">Add Product</a>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             @foreach($data as $product)
                 <div class="bg-white shadow-md rounded-lg overflow-hidden">
